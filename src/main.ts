@@ -1,3 +1,4 @@
+import Instance3D from './instance-3D'
 import './style.css'
 
-document.querySelector<HTMLDivElement>('#app')?.appendChild(document.createElement("div"))
+Instance3D.instance.render();
