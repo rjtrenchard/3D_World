@@ -1,14 +1,18 @@
-import { PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { CubeTexture, CubeTextureLoader, DataTexture, DefaultLoadingManager, Loader, LoadingManager, PerspectiveCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
+import { TGALoader } from "three/examples/jsm/Addons.js";
+import fs from 'fs';
 
 class Instance3D { 
     private static _instance = new Instance3D;
     public static get instance() { return this._instance; }
 
+    // renderer props
     private _width: number;
     private _height: number;
     private _renderer: WebGLRenderer;
     private _camera: PerspectiveCamera;
 
+    // world props
     private readonly _scene = new Scene();
 
     private constructor() {
@@ -41,6 +45,37 @@ class Instance3D {
     public render = () => { 
         requestAnimationFrame(this.render);
         this._renderer.render(this._scene, this._camera);
+    }
+
+    public setSkybox() {
+        const skyboxFiles = [
+            "res/galaxy/galaxy+X.tga",
+            "res/galaxy/galaxy-X.tga",
+            "res/galaxy/galaxy+Y.tga",
+            "res/galaxy/galaxy-Y.tga",
+            "res/galaxy/galaxy+Z.tga",
+            "res/galaxy/galaxy-Z.tga",
+        ];        
+        
+        // create loading manager for targa files
+        const loadingManager = new LoadingManager();
+        loadingManager.addHandler(/\.tga$/i, new TGALoader());
+
+        const tgaLoader = new TGALoader();
+        const material = tgaLoader.load(skyboxFiles[0], (texture) => { this._scene.background = texture});
+
+        console.log(material);
+
+
+        // create cubeloader with new loading manager
+        const cubeLoader = new CubeTextureLoader();
+
+        // define skybox
+        const skybox = cubeLoader.load(skyboxFiles);
+
+        // add skybox to background
+        // this._scene.background = skybox;
+        
     }
 }
 
