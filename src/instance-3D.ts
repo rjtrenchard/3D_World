@@ -1,6 +1,7 @@
-import { CubeTexture, CubeTextureLoader, DataTexture, DefaultLoadingManager, Loader, LoadingManager, PerspectiveCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
+import { CubeTexture, CubeTextureLoader, DataTexture, DefaultLoadingManager, Loader, LoadingManager, PerspectiveCamera, PlaneGeometry, Scene, TextureImageData, WebGLRenderer } from "three";
 import { TGALoader } from "three/examples/jsm/Addons.js";
 import fs from 'fs';
+// import { cubeTexture } from "three/tsl";
 
 class Instance3D { 
     private static _instance = new Instance3D;
@@ -43,29 +44,20 @@ class Instance3D {
     }
 
     public render = () => { 
+        this._camera.rotateX(0.001);
         requestAnimationFrame(this.render);
         this._renderer.render(this._scene, this._camera);
     }
 
     public setSkybox() {
         const skyboxFiles = [
-            "res/galaxy/galaxy+X.tga",
-            "res/galaxy/galaxy-X.tga",
-            "res/galaxy/galaxy+Y.tga",
-            "res/galaxy/galaxy-Y.tga",
-            "res/galaxy/galaxy+Z.tga",
-            "res/galaxy/galaxy-Z.tga",
+            "res/galaxy/galaxy+X.png",
+            "res/galaxy/galaxy-X.png",
+            "res/galaxy/galaxy+Y.png",
+            "res/galaxy/galaxy-Y.png",
+            "res/galaxy/galaxy+Z.png",
+            "res/galaxy/galaxy-Z.png",
         ];        
-        
-        // create loading manager for targa files
-        const loadingManager = new LoadingManager();
-        loadingManager.addHandler(/\.tga$/i, new TGALoader());
-
-        const tgaLoader = new TGALoader();
-        const material = tgaLoader.load(skyboxFiles[0], (texture) => { this._scene.background = texture});
-
-        console.log(material);
-
 
         // create cubeloader with new loading manager
         const cubeLoader = new CubeTextureLoader();
@@ -74,7 +66,7 @@ class Instance3D {
         const skybox = cubeLoader.load(skyboxFiles);
 
         // add skybox to background
-        // this._scene.background = skybox;
+        this._scene.background = skybox;
         
     }
 }
